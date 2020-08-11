@@ -1,0 +1,73 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePackagesMarketBonusTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $foreign = config('marketBonus.foreign');
+        $tableNames = config('marketBonus.table_names');
+        $columnNames = config('marketBonus.column_names');
+
+        if (empty($tableNames)) {
+            throw new \Exception('Error: config/marketBonus.php not loaded. Run [php artisan config:clear] and try again.');
+        }
+
+        Schema::create($tableNames['stepsPercent'], function (Blueprint $table) {
+            $table->integer('stepPercentID', true);
+            $table->integer('amount')->nullable();
+            $table->integer('percent')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create($tableNames['bonusSettings'], function (Blueprint $table) {
+            $table->integer('bonusSettingID', true);
+            $table->string('alias')->nullable();
+            $table->string('name')->nullable();
+            $table->integer('value')->nullable();
+            $table->timestamps();
+        });
+
+        if (Schema::hasTable($tableNames['marketOrders'])) {
+            Schema::table($tableNames['marketOrders'], function (Blueprint $table) {
+                $table->string('addBonuses')->nullable();
+                $table->string('deductBonuses')->nullable();
+                $table->timestamp('dateBonuses')->nullable();
+            });
+        }
+
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $tableNames = config('marketBonus.table_names');
+
+        if (empty($tableNames)) {
+            throw new \Exception('Error: config/marketBonus.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
+        }
+
+        Schema::drop($tableNames['stepsPercent']);
+        Schema::drop($tableNames['bonusSettings']);
+
+        if (Schema::hasTable($tableNames['marketOrders'])) {
+            Schema::table($tableNames['marketOrders'], function (Blueprint $table) {
+                $table->dropColumn('addBonuses');
+                $table->dropColumn('deductBonuses');
+                $table->dropColumn('dateBonuses');
+            });
+        }
+    }
+}
