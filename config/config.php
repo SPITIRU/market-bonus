@@ -19,7 +19,7 @@
             'marketOrders' => MarketOrder::class
         ],
 
-        'resolve_models' => [
+        'resolve' => [
             'stepsPercent' => resolve(MarketStepsPercent::class),
             'bonusSettings' => resolve(MarketBonusSetting::class),
             'marketOrders' => resolve(MarketOrder::class)

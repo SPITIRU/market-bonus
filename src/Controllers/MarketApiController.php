@@ -11,8 +11,9 @@ class MarketApiController extends ApiController
 
     public function bonus(Request $request): object
     {
-        $arrBonus['bonuses'] = $this->userBonuses($this->currentUser);
-        $arrBonus['percent'] = $this->userDiscount($this->currentUser);
+        $user = $this->currentUser;
+        $arrBonus['bonuses'] = $this->userBonuses($user->userID);
+        $arrBonus['percent'] = $this->userDiscount($user);
         $arrBonus['list'] = $this->listOfOperations($this->currentUser, $request->skip);
 
         return $this->json($arrBonus, self::HTTP_OK);
