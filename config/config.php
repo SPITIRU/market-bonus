@@ -11,6 +11,10 @@
 //            'logs_key' => 'userID',
 //        ],
 
+        'errors' => [
+            'user_not_found' => 'Пользователь не найден'
+        ],
+
         'middleware' => [],
 
         'models' => [
